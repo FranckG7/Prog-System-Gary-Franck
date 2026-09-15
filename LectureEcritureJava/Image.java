@@ -1,4 +1,5 @@
 import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class Image {
@@ -13,17 +14,17 @@ public class Image {
     /**
      * Constructeur : initialise une image vide.
      */
-    public Image(int width, int hauteur) {
+    public Image(int width, int height) {
         this.width = width;
         this.height = height;
-        pixels = new int[hauteur][largeur][3];
+        this.pixels = new int[height][width][3];
     }
 
     /**
      * Définit la couleur d'un pixel à la position (x, y)
      */
     public void setPixel(int x, int y, int r, int g, int b) {
-        if (x >= 0 && x < largeur && y >= 0 && y < hauteur) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
             pixels[y][x][0] = r;
             pixels[y][x][1] = g;
             pixels[y][x][2] = b;
@@ -34,27 +35,42 @@ public class Image {
      * Sauvegarde l'image au format texte PPM (P3)
      */
     public void save_txt(String filename) throws IOException {
-		try {
-            FileWriter writer = new FileWriter("FirstPPM.ppm");
+		
+            FileWriter writer = new FileWriter(filename);
 
             writer.write("P3\n");
             // Écriture des dimensions
-			writer.write(largeur + " " + hauteur + "\n");
+			writer.write(width + " " + height + "\n");
             // Écriture de la valeur maximal
-			writer.write("255");
+			writer.write("255\n");
 			
-			for(int y= 0; y < hauteur; y++) {
-				for(int x = 0; x < largeur; x++) {
+			for(int y= 0; y < height; y++) {
+				for(int x = 0; x < width; x++) {
 					int bleu = 0;
-					writer.write(pixels[y][x][0] + " " + pixels[y][x][1] + " " + pixels[y][x][2] );
+					writer.write(pixels[y][x][0] + " " + pixels[y][x][1] + " " + pixels[y][x][2] + " " );
 				}
+				writer.write("\n");
 			}
 			
             writer.close(); // Fermeture du fichier
-
-            System.out.println("Image PPM créée avec succès !");
-        } catch (IOException e) {
-            System.err.println("Erreur lors de l'écriture du fichier : " + e.getMessage());
-        }
+			System.out.print("Image PPM crée avec succès\n");
     }
+	
+	/**
+	 * Sauvegarde l'image au format binaire PPM(P6) 
+	 */
+	public void save_binaire(String filename) throws IOException {
+		
+		FileOutputStream Output = new FileOutputStream(filename);
+		String header = "P6\n" + width + " " + height + " \n 255 \n" ;
+		Output.write(header.getBytes());
+		for(int y= 0; y < height; y++) {
+				for(int x = 0; x < width; x++) {
+					Output.write(pixels[y][x][0]);
+					Output.write(pixels[y][x][2]);
+					Output.write(pixels[y][x][1]);
+				}
+			}
+		System.out.print("Image PPM crée avec succès\n");
+	}
 }
