@@ -11,7 +11,7 @@ public class FirstPPM {
             // Écriture des dimensions
 			writer.write("255\n");
             // Écriture de la valeur maximal
-			writer.write("255 0 0 0 255 0 0 0 255");
+			writer.write("255 0 0 0 255 0 0 0 255\n");
             // Écriture des pixels
 			writer.write("255 255 0 255 255 255 0 0 0");
             // Première ligne : rouge, vert, bleu
