@@ -2,3 +2,5 @@
 *.jar
 *.o
 *.obj
+*.class
+*.jar
