@@ -1,5 +1,9 @@
 import java.io.FileWriter;
+import java.io.FileReader;
 import java.io.FileOutputStream;
+import java.io.BufferedWriter;
+import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 
 public class Image {
@@ -30,13 +34,27 @@ public class Image {
             pixels[y][x][2] = b;
         }
     }
+	
+	/**
+	 * Définit la couleur d'un pixel deux fois plus combre à la position (x,y)
+	 */
+	public void assombrir() {
+		for(int y=0; y < height; y++) {
+			for(int x=0; x < width; x++) {
+				pixels[y][x][0] =  pixels[y][x][0] / 2;
+				pixels[y][x][1] =  pixels[y][x][1] / 2;
+				pixels[y][x][2] =  pixels[y][x][2] / 2;
+			}
+		}
+	}
+	
 
     /**
      * Sauvegarde l'image au format texte PPM (P3)
      */
     public void save_txt(String filename) throws IOException {
 		
-            FileWriter writer = new FileWriter(filename);
+            BufferedWriter writer = new BufferedWriter (new FileWriter(filename));
 
             writer.write("P3\n");
             // Écriture des dimensions
@@ -46,7 +64,6 @@ public class Image {
 			
 			for(int y= 0; y < height; y++) {
 				for(int x = 0; x < width; x++) {
-					int bleu = 0;
 					writer.write(pixels[y][x][0] + " " + pixels[y][x][1] + " " + pixels[y][x][2] + " " );
 				}
 				writer.write("\n");
@@ -61,16 +78,19 @@ public class Image {
 	 */
 	public void save_binaire(String filename) throws IOException {
 		
-		FileOutputStream Output = new FileOutputStream(filename);
-		String header = "P6\n" + width + " " + height + " \n 255 \n" ;
+		BufferedOutputStream Output = new BufferedOutputStream (new FileOutputStream(filename));
+		String header = "P6\n" + width + " " + height + " \n255\n" ;
 		Output.write(header.getBytes());
 		for(int y= 0; y < height; y++) {
-				for(int x = 0; x < width; x++) {
-					Output.write(pixels[y][x][0]);
-					Output.write(pixels[y][x][2]);
-					Output.write(pixels[y][x][1]);
-				}
+			for(int x = 0; x < width; x++) {
+				Output.write(pixels[y][x][0]);
+				Output.write(pixels[y][x][1]);
+				Output.write(pixels[y][x][2]);
 			}
+				
+		}
+		Output.close();
 		System.out.print("Image PPM crée avec succès\n");
 	}
+	
 }
