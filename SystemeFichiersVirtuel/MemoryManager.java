@@ -32,6 +32,9 @@ public class MemoryManager {
     private void initializeFilesystem() {
         writeSuperblock();
 
+		for(int i=0; i < 129; i++) {
+			setBlockUsed(i, true);
+		}
         // TODO:
         // Réserver les blocs système 0 à 128.
     }
@@ -70,4 +73,26 @@ public class MemoryManager {
     public byte[] getFilesystemMemory() {
         return memory;
     }
+	
+	public boolean setBlockUsed(int blockNumber, boolean used) {
+			
+		if (blockNumber < 0 ||
+			blockNumber >= NUM_BLOCKS) {
+			return false;
+		}
+
+		int byteIndex = blockNumber / 8;
+		int bitPosition = blockNumber % 8;
+		int offset = BITMAP_OFFSET + byteIndex;
+
+		if (used) {
+			// TODO:
+			// Positionner le bit à 1.
+		} else {
+			// TODO:
+			// Positionner le bit à 0.
+		}
+
+		return true;
+	}
 }
