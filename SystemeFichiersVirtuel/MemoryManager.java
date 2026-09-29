@@ -88,7 +88,9 @@ public class MemoryManager {
 		if (used) {
 			// TODO:
 			// Positionner le bit à 1.
+			memory[offset] = (byte) ((memory[offset]) | (1 << bitPosition));
 		} else {
+			memory[offset] = (byte) ((memory[offset]) & (0 << bitPosition));
 			// TODO:
 			// Positionner le bit à 0.
 		}
@@ -103,16 +105,32 @@ public class MemoryManager {
 			return -1;
 		}
 
+
+		int byteIndex = blockNumber / 8;
+		int bitPosition = blockNumber % 8;
+		int offset = BITMAP_OFFSET + byteIndex;
+		int octet = memory[offset] & 0xFF;
+		
+		if(octet != 0 & 1 << bitPosition !=0) {
+			return 1;
+		} else {
+			return 0;
+		}
 		// TODO:
 		// Calculer byteIndex.
 		// Calculer bitPosition.
 		// Lire le bit.
-
-		return -1;
 	}
 
 	public int allocateBlock() {
 
+		for(int i = 129; i < NUM_BLOCKS  -1;i++) {
+			if(isBlockUsed(i) == 0) {
+				setBlockUsed(i, true);
+				return i;
+			}
+			
+		}
 		// TODO:
 		// Parcourir les blocs de données :
 		// 129 .. NUM_BLOCKS - 1.
