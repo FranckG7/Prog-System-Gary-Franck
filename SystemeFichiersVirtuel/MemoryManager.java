@@ -90,7 +90,8 @@ public class MemoryManager {
 			// Positionner le bit à 1.
 			memory[offset] = (byte) ((memory[offset]) | (1 << bitPosition));
 		} else {
-			memory[offset] = (byte) ((memory[offset]) & (0 << bitPosition));
+			memory[offset] = (byte) ((memory[offset]) & (1 << bitPosition)); // ou-exclusif
+			
 			// TODO:
 			// Positionner le bit à 0.
 		}
@@ -124,7 +125,7 @@ public class MemoryManager {
 
 	public int allocateBlock() {
 
-		for(int i = 129; i < NUM_BLOCKS  -1;i++) {
+		for(int i = 129; i < NUM_BLOCKS;i++) {
 			if(isBlockUsed(i) == 0) {
 				setBlockUsed(i, true);
 				return i;

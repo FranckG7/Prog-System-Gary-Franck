@@ -3,8 +3,6 @@ public class Utils {
 
 
     public static int writeInt(byte[] memory, int offset, int value) {
-        // TODO: Écrire les 4 octets de 'value' dans 'memory'
-        // à partir de 'offset', en big-endian.
 		memory[offset] = (byte) (value >> 24);
 		memory[offset + 1] = (byte)(value >> 16);
 		memory[offset + 2] = (byte) (value >> 8);
@@ -24,7 +22,6 @@ public class Utils {
     }
 
     public static int writeShort(byte[] memory, int offset, short value) {
-        // TODO: Écrire les 2 octets de 'value'.
 		memory[offset] = (byte) (value >> 8);
 		memory[offset + 1] = (byte) (value);
 		
@@ -40,7 +37,6 @@ public class Utils {
     }
 	
 	public static int writeLong(byte[] memory, int offset, long value) {
-		// TODO: Écrire les 8 octets du long en big-endian.
         memory[offset]     = (byte) (value >> 56);
         memory[offset + 1] = (byte) (value >> 48);
         memory[offset + 2] = (byte) (value >> 40);
@@ -53,7 +49,6 @@ public class Utils {
         return 8;
     }
 	public static long readLong(byte[] memory, int offset) {
-		// TODO: Reconstituer le long.
 		long b0 = (memory[offset] & 0xFFL) << 56;
 		long b1 = (memory[offset +1] &  0xFFL) << 48;
 		long b2 = (memory[offset + 2] & 0xFFL) << 40;
@@ -71,10 +66,7 @@ public class Utils {
 			int offset,
 			String str,
 			int maxLength) {
-		// TODO:
-		// 1. Convertir la chaîne en octets.
-		// 2. Copier les octets sans dépasser maxLength.
-		// 3. Nettoyer le reste de la zone avec des zéros.
+				
 			byte[] bytes = str.getBytes();
 			int bytesToWrite = Math.min(bytes.length, maxLength);
 			
@@ -94,10 +86,6 @@ public class Utils {
 		while(length <  maxLength && memory[offset + length] != 0) {
 			length++;
 		}
-		// TODO:
-		// Lire jusqu'au premier octet nul
-		// ou jusqu'à maxLength.
-
 		return new String(memory, offset, length);
 	}
 		
