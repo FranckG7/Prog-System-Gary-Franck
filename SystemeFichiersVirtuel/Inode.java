@@ -15,7 +15,7 @@ public class Inode {
     }
 
     public int getInodeOffset() {
-        return memoryManager.INODE_TABLE_OFFSET + inodeNumber + INODE_SIZE;
+        return MemoryManager.INODE_TABLE_OFFSET + (inodeNumber * INODE_SIZE);
     }
 
     public int getFileType() {
@@ -44,4 +44,46 @@ public class Inode {
 
         return pointers;
     }
+	public void writeToMemory(
+        int fileType,
+        int fileSize,
+        long creationTime,
+        long modificationTime,
+        int[] directPointers,
+        int indirectPointer,
+        short permissions,
+        int linkCount) {
+			
+		byte[] memory =
+				memoryManager.getFilesystemMemory();
+
+		int offset = getInodeOffset();
+
+		// 1
+		offset += Utils.writeInt(memory, offset, inodeNumber);
+		// 2
+		offset += Utils.writeInt(memory, offset, fileType);
+		// 3
+		offset += Utils.writeInt(memory, offset, fileSize);
+		// 4
+		offset += Utils.writeLong(memory, offset, creationTime);
+		// 5
+		offset += Utils.writeLong(memory, offset, modificationTime);
+		// 6
+		for(int i = 0; i < DIRECT_POINTERS; i++) {
+			int pointers; 
+			if (directPointers != null && i < directPointers.length) {
+				pointers = directPointers[i];
+			} else {
+				pointers = 0;
+			}
+			offset += Utils.writeInt(memory, offset, pointers);			
+		}	
+		// 7
+		offset += Utils.writeInt(memory, offset, indirectPointer);
+		// 8
+		offset += Utils.writeShort(memory, offset, permissions);
+		// 9
+		offset += Utils.writeInt(memory, offset, linkCount);
+}
 }

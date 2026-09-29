@@ -32,7 +32,7 @@ public class MemoryManager {
     private void initializeFilesystem() {
         writeSuperblock();
 
-		for(int i=0; i < 129; i++) {
+		for(int i=0; i < 128; i++) {
 			setBlockUsed(i, true);
 		}
         // TODO:
@@ -90,7 +90,7 @@ public class MemoryManager {
 			// Positionner le bit à 1.
 			memory[offset] = (byte) ((memory[offset]) | (1 << bitPosition));
 		} else {
-			memory[offset] = (byte) ((memory[offset]) & (1 << bitPosition)); // ou-exclusif
+			memory[offset] = (byte) ((memory[offset]) & ~(1 << bitPosition)); // ou-exclusif
 			
 			// TODO:
 			// Positionner le bit à 0.
@@ -112,7 +112,7 @@ public class MemoryManager {
 		int offset = BITMAP_OFFSET + byteIndex;
 		int octet = memory[offset] & 0xFF;
 		
-		if(octet != 0 & 1 << bitPosition !=0) {
+		if((memory[offset] & 1 << bitPosition) !=0) {
 			return 1;
 		} else {
 			return 0;
