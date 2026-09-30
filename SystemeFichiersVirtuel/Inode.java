@@ -5,6 +5,7 @@ public class Inode {
 
     public static final int INODE_SIZE = 128;
     public static final int DIRECT_POINTERS = 10;
+	public static final int MAX_INODES = 32;
 
     public Inode(
             MemoryManager memoryManager,
