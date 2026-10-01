@@ -1,4 +1,4 @@
-public class testRunner {
+public class TestRunner {
 
 	public static void main(String[] args) {
 		testStep2();
@@ -8,6 +8,7 @@ public class testRunner {
 		testStep6();
 		testStep7();
 		testStep8();
+		testStep9();
 	}
 
 	public static void testStep2() {
@@ -344,6 +345,55 @@ public class testRunner {
 				"Le second fichier doit être vide";
 
 		System.out.println("[OK] Étape 8 validée !");
+	}
+	
+	public static void testStep9() {
+		System.out.println("=== TEST ÉTAPE 9 : Entrées/Sorties Fichier ===");
+
+		VirtualFileSystem vfs =
+				new VirtualFileSystem();
+
+		assert vfs.createFile(
+				"/",
+				"test.txt");
+
+		String text =
+				"Contenu de test du système de fichiers";
+
+		byte[] original =
+				text.getBytes();
+
+		boolean writeOk =
+				vfs.writeFile(0, original);
+
+		assert writeOk :
+				"Erreur d'écriture";
+
+		Inode inode =
+				new Inode(
+						vfs.getMemoryManager(),
+						0);
+
+		assert inode.getFileSize()
+				== original.length :
+				"Taille d'inode incorrecte";
+
+		byte[] readBytes =
+				vfs.readFile(0);
+
+		assert readBytes != null :
+				"Buffer lu nul";
+
+		assert readBytes.length
+				== original.length :
+				"Longueur lue incorrecte";
+
+		for (int i = 0; i < original.length; i++) {
+			assert readBytes[i] == original[i] :
+					"Octet incorrect à l'indice " + i;
+		}
+
+		System.out.println("[OK] Étape 9 validée !");
 	}
 		
 }

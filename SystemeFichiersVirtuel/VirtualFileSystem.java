@@ -52,8 +52,114 @@ public class VirtualFileSystem {
 
         return true;
     }
+	
+	public boolean writeFile(
+        int inodeNum,
+        byte[] data) {
 
-    public MemoryManager getMemoryManager() {
+		int blocksNeeded =
+				(data.length
+				+ MemoryManager.BLOCK_SIZE - 1)
+				/ MemoryManager.BLOCK_SIZE;
+
+		if (blocksNeeded > Inode.DIRECT_POINTERS) {
+			return false;
+		}
+
+		int[] blockPointers =
+				new int[Inode.DIRECT_POINTERS];
+		
+		for(int i = 0; i < blocksNeeded; i++) {
+			int numBlock = memoryManager.allocateBlock();
+			if( numBlock == -1) {
+				return false;
+			}
+			blockPointers[i] = numBlock;
+		}
+
+		byte[] memory =
+				memoryManager.getFilesystemMemory();
+
+		int bytesRemaining =
+				data.length;
+
+		int dataSrcOffset = 0;
+
+		for(int i = 0; i < blocksNeeded; i++) {
+			int bytesToCopy = Math.min(bytesRemaining, 
+				MemoryManager.BLOCK_SIZE);
+			int numBlock = blockPointers[i];
+			int physicalOffset = numBlock * MemoryManager.BLOCK_SIZE;
+			
+			System.arraycopy(data, dataSrcOffset, memory, physicalOffset,
+							 bytesToCopy);
+							
+			dataSrcOffset += bytesToCopy;
+			bytesRemaining -= bytesToCopy;
+							 
+		}
+		
+		Inode inode = new Inode(memoryManager, inodeNum);
+		long now = System.currentTimeMillis();
+		
+		inode.writeToMemory(
+            1,                               // fileType 
+            data.length,                     // fileSize 
+            now,                             // creationTime
+            now,                             // modificationTime
+            blockPointers,                   // directPointers vides
+            -1,                              // indirectPointer
+            (short) 0,                       // permissions
+            1                                // linkCount
+        );
+
+        return true;
+	}
+	
+	public byte[] readFile(int inodeNum) {
+
+		Inode inode =
+				new Inode(memoryManager, inodeNum);
+
+		int fileSize =
+				inode.getFileSize();
+
+		if (fileSize == 0) {
+			return new byte[0];
+		}
+
+		byte[] fileData =
+				new byte[fileSize];
+
+		byte[] memory =
+				memoryManager.getFilesystemMemory();
+
+		int[] blockPointers =
+				inode.getDirectPointers();
+				
+		int bytesRemaining = fileSize;
+		int destOffset = 0;
+		
+		for(int i = 0; i < Inode.DIRECT_POINTERS && bytesRemaining > 0; i++) {
+			int numBlock = blockPointers[i];
+			if(numBlock > 0) {
+				int bytesToRead = Math.min(bytesRemaining, 
+						MemoryManager.BLOCK_SIZE);
+				int physicalOffset = numBlock * MemoryManager.BLOCK_SIZE;
+				
+				System.arraycopy(memory, physicalOffset, fileData, 
+						destOffset, bytesToRead);
+				
+				destOffset += bytesToRead;
+				bytesRemaining -= bytesToRead;
+			}
+		}
+
+		return fileData;
+	}
+	
+	public MemoryManager getMemoryManager() {
         return memoryManager;
     }
+	
 }
