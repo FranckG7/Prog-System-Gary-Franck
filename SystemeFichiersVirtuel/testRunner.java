@@ -9,6 +9,7 @@ public class TestRunner {
 		testStep7();
 		testStep8();
 		testStep9();
+		testStep10();
 	}
 
 	public static void testStep2() {
@@ -394,6 +395,37 @@ public class TestRunner {
 		}
 
 		System.out.println("[OK] Étape 9 validée !");
+	}
+	
+	public static void testStep10() {
+		System.out.println("=== TEST ÉTAPE 10 : Suppression de Fichier ===");
+
+		VirtualFileSystem vfs = new VirtualFileSystem();
+
+		assert vfs.createFile("/", "a_supprimer.txt");
+
+		byte[] data = "Donnees a effacer".getBytes();
+		assert vfs.writeFile(0, data) : "Erreur d'ecriture initiale";
+
+		MemoryManager mm = vfs.getMemoryManager();
+		Inode inode = new Inode(mm, 0);
+
+		int[] pointersBefore = inode.getDirectPointers();
+		int allocatedBlock = pointersBefore[0];
+
+		assert mm.isBlockUsed(allocatedBlock) == 1 : "Le bloc devrait etre occupe";
+
+		boolean deleteOk = vfs.deleteFile(0);
+		assert deleteOk : "La suppression a echoue";
+
+		assert inode.getFileType() == 0 : "L'inode doit être libre (type 0)";
+		assert inode.getFileSize() == 0 : "La taille doit être 0";
+		assert mm.isBlockUsed(allocatedBlock) == 0 : "Le bloc doit être libéré";
+
+		assert vfs.createFile("/", "nouveau.txt");
+		assert inode.getFileType() == 1 : "L'inode 0 doit pouvoir être réutilisé";
+
+		System.out.println("[OK] Étape 10 validée !");
 	}
 		
 }
