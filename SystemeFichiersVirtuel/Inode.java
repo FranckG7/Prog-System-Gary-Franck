@@ -40,11 +40,16 @@ public class Inode {
 		for(int i = 0; i < 10; i++) {
 			pointers[i] = Utils.readInt(memory, getInodeOffset() + 28 + i * 4);
 		}
-        // TODO:
-        // Lire les 10 pointeurs directs.
+
 
         return pointers;
     }
+	
+	public int getIndirectPointer() {
+		byte[] memory = memoryManager.getFilesystemMemory();
+		return Utils.readInt(memory, getInodeOffset() + 68);
+	}
+	
 	public void writeToMemory(
         int fileType,
         int fileSize,

@@ -35,13 +35,9 @@ public class MemoryManager {
 		for(int i=0; i < 128; i++) {
 			setBlockUsed(i, true);
 		}
-        // TODO:
-        // Réserver les blocs système 0 à 128.
     }
 
     private void writeSuperblock() {
-        // TODO:
-        // Utiliser Utils pour écrire les métadonnées.
 
         Utils.writeString(
                 memory,
@@ -86,14 +82,10 @@ public class MemoryManager {
 		int offset = BITMAP_OFFSET + byteIndex;
 
 		if (used) {
-			// TODO:
-			// Positionner le bit à 1.
 			memory[offset] = (byte) ((memory[offset]) | (1 << bitPosition));
 		} else {
 			memory[offset] = (byte) ((memory[offset]) & ~(1 << bitPosition)); // ou-exclusif
-			
-			// TODO:
-			// Positionner le bit à 0.
+		
 		}
 
 		return true;
@@ -117,10 +109,6 @@ public class MemoryManager {
 		} else {
 			return 0;
 		}
-		// TODO:
-		// Calculer byteIndex.
-		// Calculer bitPosition.
-		// Lire le bit.
 	}
 
 	public int allocateBlock() {
@@ -132,13 +120,6 @@ public class MemoryManager {
 			}
 			
 		}
-		// TODO:
-		// Parcourir les blocs de données :
-		// 129 .. NUM_BLOCKS - 1.
-		//
-		// Retourner le premier bloc libre.
-		// Le marquer immédiatement comme utilisé.
-
 		return -1;
 	}
 }
