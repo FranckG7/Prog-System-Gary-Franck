@@ -17,7 +17,7 @@ public class Calcule extends Thread {
 	@Override 
 	public void run() {
 		for(int i = 0; i < multiplicateur; i++) {
-			resultat += valeur * multiplicateur + valeur;	
+			resultat += valeur * valeur + valeur;	
 		}
 	}
 	

@@ -20,7 +20,6 @@ public class CalculSequentiel {
             }
 
             sommeTotal += resultat;
-            System.out.println("Traitement de " + valeur + " terminé : " + resultat);
         }
 
         long duree = (System.nanoTime() - debut) / 1_000_000;
