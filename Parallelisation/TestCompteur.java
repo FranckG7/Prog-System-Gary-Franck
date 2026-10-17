@@ -1,23 +1,51 @@
 public class TestCompteur {
 	
-	public static void main(String[] args)  {
+		private static final int NB_THREADS = 9;
+		private static final int INCREMENTS = 1111111;
+		private static final int ATTENDU = NB_THREADS * INCREMENTS;
+		private static final int NB_TESTS = 50;
+	
+	public static void main(String[] args) throws InterruptedException {
 		
-		private static final int[] DONNEES = {}; // TODO remplir les données
 		
-		Calcule[] threads1 = new Calcule[DONNEES.length]; 
-		Calcule[] threads2 = new Calcule[DONNEES.length]; 
-		Calcule[] threads3 = new Calcule[DONNEES.length]; 
-		Calcule[] threads4 = new Calcule[DONNEES.length]; 
-		Calcule[] threads5 = new Calcule[DONNEES.length]; 
-		Calcule[] threads6 = new Calcule[DONNEES.length]; 
-		Calcule[] threads7 = new Calcule[DONNEES.length]; 
-		Calcule[] threads8 = new Calcule[DONNEES.length]; 
-		Calcule[] threads9 = new Calcule[DONNEES.length]; 
+		
+		int nbSucces = 0;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
 		
 		for(int i = 0; i < 50; i++) {
-			// TODO compléter la boucle for 
-		}
+			CompteurDangereux.resetCompteur();
+			Thread[] threads = new Thread[NB_THREADS];
 			
+			for (int j = 0; j < NB_THREADS; j++) {
+				threads[j] = new Thread(new CompteurDangereux.Incrementeur("Thread-" + j, INCREMENTS));
+			}
+			for (int j = 0; j < NB_THREADS; j++) {
+				threads[j].start();
+			}
+			for (int j = 0; j < NB_THREADS; j++) {
+				threads[j].join();
+			}
+			
+			int resultat = CompteurDangereux.getCompteur();
+            System.out.println("Test " + (i + 1) + " - Compteur obtenu : " + resultat + " / " + ATTENDU + " attendu");
+
+            if (resultat == ATTENDU) {
+                nbSucces++;
+            }
+            if (resultat < min) {
+				min = resultat;
+			}
+			
+			if (resultat > max) {
+				max = resultat;
+			}
+			
+        }
+
+        System.out.println("Réussites : " + nbSucces + " / " + NB_TESTS + " (" + ((double) nbSucces / NB_TESTS * 100) + " %)");
+        System.out.println("Valeur min : " + min);
+        System.out.println("Valeur max : " + max);
 	}
 
 }
