@@ -1,4 +1,6 @@
 Dépôt de : Franck GARY
+Elève de deuxième année en but informatique à l'iut de Rodez.
+
 
 Voici les différents thèmes aborder dans la ressources Programmation système : 
 
