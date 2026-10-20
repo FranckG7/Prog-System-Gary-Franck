@@ -1,5 +1,5 @@
 public class CompteurDangereux {
-    private static int compteurGlobal = 0;  // Variable partagée MODIFIABLE
+    private static int compteurGlobal = 0; 
 
     static class Incrementeur implements Runnable {
         private final String nom;
@@ -13,7 +13,6 @@ public class CompteurDangereux {
         @Override
         public void run() {
             for (int i = 0; i < nombreIncrements; i++) {
-                // TODO: Expliquer pourquoi cette ligne pose problème
                 compteurGlobal++;  // RACE CONDITION ICI !
             }
             System.out.println(nom + " terminé. Compteur vu : " + compteurGlobal);
