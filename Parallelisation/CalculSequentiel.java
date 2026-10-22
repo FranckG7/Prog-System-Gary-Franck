@@ -1,4 +1,4 @@
-public class CalculSequentiel {
+	public class CalculSequentiel {
     private static final int[] DONNEES = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     private static final int MULTIPLICATEUR = 1000;
 
